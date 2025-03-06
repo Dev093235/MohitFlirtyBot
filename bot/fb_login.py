@@ -1,8 +1,8 @@
 import json
 import requests
 
-# Step 1: cookies.txt se cookies load karo
-def load_cookies(file_path="cookies.txt"):
+# Step 1: cookies.json se cookies load karo
+def load_cookies(file_path="cookies.json"):
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             cookies = json.load(f)  # JSON format me load kar rahe hain
