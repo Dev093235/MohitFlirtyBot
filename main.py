@@ -13,6 +13,11 @@ def load_cookies():
     with open("cookies.json", "r") as file:
         return json.load(file)
 
+# Load Bot Config
+def load_config():
+    with open("config.json", "r") as file:
+        return json.load(file)
+
 cookies = load_cookies()
 client = Client("", "", session_cookies=cookies)
 
@@ -21,6 +26,12 @@ print(f"✅ Logged in as: {client.uid}")
 # Auto-Reply Function
 def auto_reply():
     while True:
+        config = load_config()  # Bot Config Load Karega
+        if config["bot_status"] == "OFF":
+            print("🚫 Bot is OFF. Waiting to start...")
+            time.sleep(10)  # 10 sec wait karega aur fir check karega
+            continue
+
         unread_messages = client.fetch_unread()
         for message in unread_messages:
             sender_id = message.author
