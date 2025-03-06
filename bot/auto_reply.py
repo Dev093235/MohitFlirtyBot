@@ -1,27 +1,30 @@
-import random
-from replies import flirty_replies
-from voice_reply import text_to_speech
-from meme_sender import send_meme
+import json
+import requests
 
-def auto_reply(message, sender):
-    """
-    Handles automatic replies based on the message received.
-    """
-    lower_msg = message.lower()
-    
-    if "meme" in lower_msg:
-        return send_meme()
-    
-    # Generate a flirty response
-    reply = random.choice(flirty_replies)
-    
-    # Convert text to voice in Hindi
-    voice_reply = text_to_speech(reply, lang='hi')
-    
-    return {"text": reply, "voice": voice_reply}
+# Step 1: cookies.json se cookies load karo
+def load_cookies(file_path="cookies.json"):
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            cookies = json.load(f)  # JSON format me load kar rahe hain
+        return cookies
+    except Exception as e:
+        print(f"❌ Error: Cookies load nahi ho rahi! ({e})")
+        return None
 
+# Step 2: Facebook login test karo
+def check_facebook_login(cookies):
+    session = requests.Session()
+    session.cookies.update(cookies)
+
+    response = session.get("https://www.facebook.com")
+    
+    if "home_icon" in response.text:
+        print("🎉 Successfully logged in to Facebook using cookies!")
+    else:
+        print("❌ Login failed! Cookies expire ho sakti hain.")
+
+# Step 3: Run the login process
 if __name__ == "__main__":
-    test_message = "Hey baby, send me something special!"
-    response = auto_reply(test_message, "User")
-    print("Text Reply:", response["text"])
-    print("Voice Reply:", response["voice"])
+    cookies = load_cookies()
+    if cookies:
+        check_facebook_login(cookies)
