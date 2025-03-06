@@ -6,7 +6,7 @@ from fbchat.models import Message, ThreadType
 from replies import get_flirty_reply
 from meme import get_random_meme
 from voice_reply import generate_voice_reply
-from name_detect import detect_name_and_reply
+from advanced_name_detect import detect_name_and_reply
 
 # Load Facebook Cookies
 def load_cookies():
@@ -29,10 +29,13 @@ def auto_reply():
 
                 # Name Detect & Flirty Reply
                 reply_text = detect_name_and_reply(user_message)
+                if not reply_text:
+                    reply_text = get_flirty_reply()
 
                 # 30% Chance to Send a Meme
                 if random.random() < 0.3:
-                    reply_text = f"{reply_text}\n\n🎭 {get_random_meme()}"
+                    meme_text = get_random_meme()
+                    reply_text = f"{reply_text}\n\n🎭 {meme_text}"
 
                 # 20% Chance to Send a Voice Reply
                 if random.random() < 0.2:
